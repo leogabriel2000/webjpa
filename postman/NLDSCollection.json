@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "9dcc2fa0-52de-45f3-a2ec-e5340eaf565b",
+		"name": "NLDS Mock API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SearchNLDS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{nlds_host}}/nlds/search?{{query}}",
+					"host": [
+						"{{nlds_host}}"
+					],
+					"path": [
+						"nlds",
+						"search"
+					],
+					"query": [
+						{
+							"key": "{{query}}",
+							"value": null
+						}
+					]
+				},
+				"description": "Search the Negative List Database"
+			},
+			"response": []
+		},
+		{
+			"name": "PostOuathToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"OAuth token generated\"] = (\r",
+							"  responseCode.code === 200 &&\r",
+							"  JSON.parse(responseBody).hasOwnProperty(\"access_token\")\r",
+							");\r",
+							"\r",
+							"if (tests[\"OAuth token generated\"]) {\r",
+							"  var body = JSON.parse(responseBody);\r",
+							"  postman.setEnvironmentVariable(\"bearer_token\", body.access_token);\r",
+							"};"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{client_secret}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{nlds_host}}/authenticate",
+					"protocol": "http",
+					"host": [
+						"{{nlds_host}}"
+					],
+					"path": [
+						"authenticate"
+					]
+				},
+				"description": "Request an Oauth token "
+			},
+			"response": []
+		},
+		{
+			"name": "Get account details",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{nlds_host}}//nlds/account/2321",
+					"host": [
+						"{{nlds_host}}"
+					],
+					"path": [
+						"",
+						"nlds",
+						"account",
+						"2321"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search PEP",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	]
+}
